@@ -45,7 +45,7 @@ setup(
     ],
     packages=['olxutils'],
     install_requires=[
-        'Mako>=1.0.3',
+        'jinja2>=2.10',
         'markdown2>=2.3.0',
         'Pygments>=2.0.1',
         'python-swiftclient>=2.2.0',

@@ -1,0 +1,44 @@
+{% macro markdown_file(url_name, display_name, filename, extras=None) -%}
+<html
+  url_name="{{ url_name }}"
+  display_name="{{ display_name }}">
+  {{ helpers.markdown_file(filename, extras) }}
+</html>
+{%- endmacro %}
+
+{% macro markdown_file_wrapped(url_name, display_name, filename, class_name, extras=None) -%}
+<html
+  url_name="{{ url_name }}"
+  display_name="{{ display_name }}">
+  <div class="{{ class_name }}">
+  {{ helpers.markdown_file(filename, extras) }}
+  </div>
+</html>
+{%- endmacro %}
+
+{% macro pdf(url_name, display_name, filename) -%}
+<pdf
+  url_name="{{ url_name }}"
+  display_name="{{ display_name }}"
+  allow_download="false"
+  source_url=""
+  source_text=""
+  url="/static/{{ filename }}"/>
+{%- endmacro %}
+
+{% macro swift_video(url_name, display_name, filename) -%}
+<video
+  url_name="{{ url_name }}"
+  display_name="{{ display_name }}"
+  download_video="false"
+  youtube_id_1_0="">
+  <source src="{{ helpers.swift_tempurl(course.course(), filename, end_date)|urlencode }}" />
+</video>
+{%- endmacro %}
+
+{% macro conditional(block_type, url_name, correct=u'True', message=u'You must complete {link} before this exercise will be made available.') -%}
+<conditional
+  sources="{{ helpers.block_url(course.org(), course.course(), block_type, url_name) }}"
+  correct="{{ correct }}"
+  message="{{ message }}" />
+{%- endmacro %}

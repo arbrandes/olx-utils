@@ -12,7 +12,7 @@ OLX is sometimes tediously repetitive, and this package enables
 courseware authors to apply the
 [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle
 when writing OLX content. It allows you to create templates (using
-[Mako](http://www.makotemplates.org/)), which in turn enable you to
+[Jinja](http://jinja.pocoo.org/)), which in turn enable you to
 
 - define OLX fragments only once, to reuse them as often as you want
   (this comes in very handy in using the

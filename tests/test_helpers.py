@@ -8,7 +8,7 @@ from unittest import TestCase
 class OLXHelpersTestCase(TestCase):
 
     def setUp(self):
-        self.h = helpers.OLXHelpers()
+        pass
 
 
 class SuffixTest(OLXHelpersTestCase):
@@ -21,7 +21,7 @@ class SuffixTest(OLXHelpersTestCase):
                     (None, u''),
                     (False, u''))
         for t in expected:
-            self.assertEqual(self.h.suffix(t[0]),
+            self.assertEqual(helpers.suffix(t[0]),
                              t[1])
 
 
@@ -34,10 +34,10 @@ class MarkdownTest(OLXHelpersTestCase):
 
         for t in expected:
             # No extras
-            self.assertEqual(self.h.markdown(t[0], extras=[]),
+            self.assertEqual(helpers.markdown(t[0], extras=[]),
                              t[1])
             # Default set of extras
-            self.assertEqual(self.h.markdown(t[0]),
+            self.assertEqual(helpers.markdown(t[0]),
                              t[1])
 
     def test_strip_whitespace(self):
@@ -48,10 +48,10 @@ class MarkdownTest(OLXHelpersTestCase):
 
         for t in expected:
             # No extras
-            self.assertEqual(self.h.markdown(t[0], extras=[]),
+            self.assertEqual(helpers.markdown(t[0], extras=[]),
                              t[1])
             # Default set of extras
-            self.assertEqual(self.h.markdown(t[0]),
+            self.assertEqual(helpers.markdown(t[0]),
                              t[1])
 
     def test_markdown_file(self):
@@ -64,6 +64,6 @@ class MarkdownTest(OLXHelpersTestCase):
                                        '%s.html' % e)
 
             with open(output_file, 'r') as o:
-                self.assertEqual(self.h.markdown_file(input_file,
-                                                      extras=[e]),
+                self.assertEqual(helpers.markdown_file(input_file,
+                                                       extras=[e]),
                                  o.read())
