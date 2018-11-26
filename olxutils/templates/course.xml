@@ -1,0 +1,33 @@
+##
+## course.xml: when using olx-utils templates such as olx_partials.xml, this
+## file must be in the root of a template lookup path, and the following must
+## be defined:
+##
+<%def name="display_name()">OpenStack Deployment and Operations</%def>
+<%def name="course()">cc201</%def>
+<%def name="org()">citycloud</%def>
+##
+## These require context variables set by olx-utils, and are defined here for
+## convenience:
+##
+<%def name="url_name()">${run_name}</%def>
+<%def name="suffix()">${olx_helpers.suffix(run_suffix)}</%def>
+<%def name="start()">${olx_helpers.date(start_date)}</%def>
+<%def name="end()">${olx_helpers.date(end_date)}</%def>
+<%def name="invitation_only()">${u"false" if is_public else u"true"}</%def>
+<%def name="ispublic()">${u"true" if is_public else u"false"}</%def>
+<course
+  display_name="${course.display_name()} ${course.suffix()}"
+  url_name="${course.url_name()}"
+  course="${course.course()}"
+  org="${course.org()}">
+  <chapter url_name="introduction"/>
+  <chapter url_name="keystone"/>
+  <chapter url_name="glance"/>
+  <chapter url_name="neutron"/>
+  <chapter url_name="nova"/>
+  <chapter url_name="cinder"/>
+  <chapter url_name="horizon"/>
+  <chapter url_name="upgrades"/>
+  <chapter url_name="conclusion"/>
+</course>
