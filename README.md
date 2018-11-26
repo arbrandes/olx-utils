@@ -11,15 +11,104 @@ A set of tools to facilitate courseware development using the
 OLX is sometimes tediously repetitive, and this package enables
 courseware authors to apply the
 [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself) principle
-when writing OLX content. It allows you to create templates (using
-[Jinja](http://jinja.pocoo.org/)), which in turn enable you to
+when writing OLX content. It allows you to define the entire course structure
+using a single [YAML](http://yaml.org/) template, and to define and use OLX
+templates with [Jinja](http://jinja.pocoo.org/).
 
-- define OLX fragments only once, to reuse them as often as you want
-  (this comes in very handy in using the
-  [hastexo XBlock](https://github.com/hastexo/hastexo-xblock)),
-- write courseware content in
+`olx-utils` comes with two built-in sequential types:
+
+- `markdown_content`: write courseware content exclusively in
   [Markdown](https://en.wikipedia.org/wiki/Markdown),
-- do anything else you would like to do using your own plugins.
+- `hastexo_lab`: tailored for use with the
+  [hastexo XBlock](https://github.com/hastexo/hastexo-xblock))
+
+## Sample `course.yaml`
+
+What follows is a sample YAML template for a course:
+
+```
+parameters:
+  name:
+    type: string
+    default: Course name
+  invitation_only:
+    type: bool
+    default: true
+  catalog_visibility:
+    type: string
+    default: both
+  run:
+    type: string
+  start:
+    type: string
+  end:
+    type: string
+  seats:
+    type: number
+
+course:
+  display_name: { get_param: name }
+  url_name: { get_param: run }
+  course: ex101
+  org: example
+  policies:
+    policy:
+      language: en
+      start: { get_param: start }
+      advertised_start: { get_param: start }
+      end: { get_param: end }
+      invitation_only: { get_param: invitation_only }
+      catalog_visibility: { get_param: catalog_visibility }
+      max_student_enrollments_allowed: { get_param: seats }
+      course_image: images_course_image.jpg
+      advanced_modules:
+        - hastexo
+    grading_policy:
+      grader:
+        - type: Lab
+          min_count: 2
+          drop_count: 1
+          weight: 1.0
+      grade_cutoffs:
+        pass: 1.0
+    assets:
+      locked: true
+      unlocked:
+      - images_course_image.jpg
+      - images_course_author.jpg
+  global_vars:
+    hastexo:
+      stack_template_path: hot_lab.yaml
+      stack_user_name: training
+      stack_protocol: rdp
+      providers:
+        - name: region1
+          capacity: 10
+          environment: hot_region1.yaml
+        - name: region2
+          capacity: -1
+          environment: hot_region2.yaml
+  chapters:
+    - display_name: Chapter 1 Name
+      url_name: chapter1
+      sequentials:
+        - display_name: Section 1
+          url_name: section1
+          type: markdown_content
+          units: 3
+        - display_name: Section 1 Lab
+          url_name: section1_lab
+          type: hastexo_lab
+          tests: 2
+        - display_name: Section 2
+          url_name: section2
+          type: markdown_content
+          units: 1
+        - display_name: Section 2 Lab
+          url_name: section2_lab
+          type: hastexo_lab
+          conditional: chapter1_section1_lab
+```
 
 ## Install
 
@@ -31,21 +120,28 @@ pip install olx-utils
 
 ## Apply templates to a course
 
-In order to create a new course run named `newrun`, starting on May 1,
-2017 and ending on October 31, 2017, simply change into your
-courseware checkout and run:
+In order to create a new course run with 30 seats named `newrun`, starting on
+December 1, 2018 and ending on December 31, 2018, simply change into your
+courseware checkout, create a new environment file as follows:
 
-```bash
-olx-new-run -b newrun 2017-05-01 2017-10-31
+```yaml
+parameters:
+  name: Cool course name (December 2018)
+  run: newrun
+  start: 2018-12-01
+  end: 2018-12-31
+  seats: 30
 ```
 
-The `-b` option causes your rendered OLX to be added to a new Git
-branch named `run/newrun`, which you can then import into your Open
-edX content store.
+Then invoke `olx-new-run`, pointing it to the file you created above:
 
-> You can also invoke `olx-new-run` as `new_run.py`. However, this is
-> deprecated and its use is discouraged. `new_run.py` will go away in
-> a future release.
+```bash
+olx-new-run --create-branch --environment new_run.yaml
+```
+
+The `--create-branch` option causes your rendered OLX to be added to a new Git
+branch named `run/newrun`, which you can then import into your Open edX content
+store.
 
 ## License
 
